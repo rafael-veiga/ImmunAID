@@ -1,6 +1,8 @@
 
 source("functions_pre.R")
-df_raw_t = readRDS(file = "./pos_data/data_raw.rds")
+#df_raw_t = readRDS(file = "./pos_data/data_raw.rds")
+df_raw_t = read_csv(file = "./pos_data/ImmunAID.csv") 
+
 
 
 ### select disease
