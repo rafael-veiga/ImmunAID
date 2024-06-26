@@ -4,9 +4,14 @@ Code used in analyse for the paper:
 **Patients with inflammation of unknown origin phenocopy the immune presentation of adult onset Still disease**
 
 ## Table of contents
-* [Files description](#Files-description)
-* [Necessary repositories](#Necessary-repositories)
-## Dataset disponible: /pos_data/ImmunAID.csv 310 cases, 505 variables
+* [Dataset description](#dataset-description)
+* [Files description](#files-description)
+* [Necessary repositories](#necessary-repositories)
+## Dataset description
+ disponible at /pos_data/ImmunAID.csv
+ 
+ 310 cases, 505 variables
+ 
 | Colums Name |  type | description |
 | :-----: | :------: | :------: |
 | id | integer | patient register |
