@@ -8,7 +8,10 @@ Code used in analyse for the paper:
 * [Necessary repositories](#Necessary-repositories)
 
 ## Files description
-* **Construct_dataset.R** : Script that .
+* **functions_pre.R** : set of functions used in all R scripts.
+* **Construct_dataset.R** : Script that integrate data sorces and create a dataset (not neccessary for the use of dataset provide).
+* **A2_pre_process_data_analise.R** : Script execute pre-process data.
+* * Remove missing.
 
 * **Tools.py** :  Set containing machine learning tools. The tools were parallelized and suitable for performing nested cross-validation. These implementations can be easily adapted and reused in different pipelines. A complete and current version can be found in the repository [https://github.com/rafael-veiga/tools_ML.git](https://github.com/rafael-veiga/tools_ML.git).
 * **Clean_data.py** : All stages of cleaning and building the study database.
