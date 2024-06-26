@@ -6,26 +6,34 @@ Code used in analyse for the paper:
 ## Table of contents
 * [Files description](#Files-description)
 * [Necessary repositories](#Necessary-repositories)
-
+## Dataset disponible: /pos_data/ImmunAID.csv 310 cases, 505 variables
+| Colums Name |  type | description |
+| :-----: | :------: | :------: |
+| id | integer | patient register |
+| disease | categorical | presence of specific disease |
+| age | integer | pacient age in years at sample colect |
+| sex | categoric | sex of the patient |
+| fil_dis | boolean | false if the patient has a disease not belong to this study.
+| < "cell variant" > in < "cell population" > | Float number | estimated quantity of cells variant in an especific cell population |
+  
 ## Files description
-* **functions_pre.R** : set of functions used in all R scripts.
-* **Construct_dataset.R** : Script that integrate data sorces and create a dataset (not neccessary for the use of dataset provide).
-* **A2_pre_process_data_analise.R** : Script execute pre-process data.
-* * Remove missing.
-
-* **Tools.py** :  Set containing machine learning tools. The tools were parallelized and suitable for performing nested cross-validation. These implementations can be easily adapted and reused in different pipelines. A complete and current version can be found in the repository [https://github.com/rafael-veiga/tools_ML.git](https://github.com/rafael-veiga/tools_ML.git).
-* **Clean_data.py** : All stages of cleaning and building the study database.
-* **feature_selection.py** : Performing all feature selection steps by machine learning for each outcome.
-* **features_eval.py** : Creates the machine learning models, evaluates the models to predict the outcomes, and extracts by measuring the most important features to predict.
-* **figs.ipynb** : Constructions of figures 1, 3 and 5.
-* **process_figs_1_2.py** : Analysis and data extraction to create figures 1 and 2.
-* **get_filter_data.py** : Extract from the database clean the data needed for all analyzes and filter for the specific question.
-* **table1.R** : Performs the analysis and builds table 1.
-* **table2a.R** : Performs the analysis and builds table 2.
-* **table2b.R** : Performs the analysis and builds table 2.
-* **table2c.R** : Performs the analysis and builds table 2.
-* **Figure4.R** : Performs the necessary analyzes and creates figure 4.
-
+* R Files
+  * **functions_pre.R** : set of functions used in all R scripts.
+  * **Construct_dataset.R** : Script that integrate data sorces and create a dataset (not neccessary for the use of dataset provide).
+  * **A2_pre_process_data_analise.R** : Script execute pre-process data:
+    * Remove missing
+    * Transformation
+    * Normalization
+    * Imputation.
+  * **B3_Descriptive_table.R** : Construct Table 1:
+  * **C3_Figs_create.R** : Construct all paper Figures and evaluate logistic regression immunologic marks odds ration. Divide in 3 parts:
+    * Base: load librarys, functions and definitions. (always need to run before the nexts parts).
+    * Part 1: calculate magnitude of effect in each disiase for each immunological marker. the estimeted effect is avalieted by odds ration estimated by logistic regression.
+    * Part 2: create all figures of the paper (it is necessary to run after Part 1 all python scripts before execute Part 2).
+* Python Files
+  * **analise4.py** : Execute estimation of diferent model generalization and behave.
+  * **auc_curv.py** : Execute evaluation of models in relation to increase the number of relevant marks.
+   
 ## Necessary repositories
 
 * **plotly** : version 5.13.1
