@@ -1,3 +1,5 @@
+#####################################################################################################################
+# BASE
 source("functions_pre.R")
 library(ape)
 library(WCluster)
@@ -61,9 +63,8 @@ get_peach_color <- function(value, min_val, max_val) {
   return(colors[color_index])
 }
 #####################################################################################
+# PART 1
 
-# process
-## Odds Ration
 print("OR")
 df = readRDS(file = "./pos_data/data_nor.rds")
 col = colnames(df)
@@ -112,10 +113,10 @@ for(d in 2:5){
 #run "analise4.py"
 
 ########################################################################################
-# Figs
+# PART 2
 
 
-#or
+##or
 fig_a = list()
 fig_a[[1]] = NA
 for(i in 2:5){
@@ -138,7 +139,7 @@ for(i in 2:5){
           plot.margin = unit(c(2,2,0,2),"mm"))
 }
 
-#violin
+##violin
 fig_c = list()
 fig_c[[1]] = NA
 df = readRDS(file = "./pos_data/data_raw.rds")
@@ -184,7 +185,7 @@ for(i in 2:5){
 
 
 
-# AUC vc N
+## AUC vc N
 fig_b = list()
 fig_b[[1]] = NA
 data = read.csv("./result/table/auc_n.csv")
@@ -206,7 +207,7 @@ for(d in 2:5){
 }
 
 
-# AUC curve
+## AUC curve
 data = read.csv(file = "./result/table/auc_curv/auc_curv.csv")
 fig_d = list()
 fig_d[[1]] = NA
@@ -227,7 +228,7 @@ fig_d[[d]] = aux %>%  ggplot(aes(x=fpr,y=tpr))+
         axis.text.x = element_text(size=8,family = font),axis.text.y = element_text(size=8,family = font))
 }
 
-#PCA all
+##PCA all
 fig_e = list()
 fig_e[[1]] = NA
 df = readRDS(file = "./pos_data/data_nor.rds")
@@ -253,7 +254,7 @@ for(i in 2:5){
 }
 
 
-#PCA best
+##PCA best
 fig_f = list()
 fig_f[[1]] = NA
 df = readRDS(file = "./pos_data/data_nor.rds")
@@ -295,7 +296,7 @@ for(i in 2:5){
 }
 
 
-### painel
+## painel
 p = list()
 p[[1]] = NA
 for(i in 2:5){
@@ -326,7 +327,7 @@ dev.off()
 
 
 ###### fig aux
-#or
+##or
 fig_aux = list()
 fig_aux[[1]] = NA
 for(i in 2:5){
@@ -487,8 +488,6 @@ pdf("fig6.pdf",width = 9,height = 12)
 print(p2)
 dev.off()
 
-
-
 ###### relevant marks
 ## bars 
 df = read.csv("./result/RF_imp2.csv")
@@ -509,52 +508,4 @@ pdf("fig_aux5.pdf",width = 9,height = 12)
 print(p1)
 dev.off()
 
-
-#### tree
-df = read.csv("./result/RF_imp2.csv")
-res = as.character(df$vari)
-res = res[res!="age"]
-res = res[res!="sex"]
-res = res[1:20]
-df = readRDS(file = "./pos_data/data_nor_t.rds")
-df$id = NULL
-df$sex = NULL
-df$age = NULL
-df$batch = NULL
-tb = table(df$disease)
-df = df %>% select(all_of(c("disease",res))) %>% group_by(disease) %>% summarise_all(mean)
-df$disease = as.character(df$disease)
-x = as.matrix(df[,colnames(df)!="disease"])
-rownames(x) <- df$disease
-df$w = NA
-df$w[df$disease==names(tb)] = tb
-
-#cor_matrix <- cor(t(df[,colnames(df)!="disease"]))
-#dist_matrix=as.matrix(dist(df[,colnames(df)!="disease"],method = 'euclidean',diag = TRUE, upper = TRUE))
-#rownames(dist_matrix) <- df$disease
-#colnames(dist_matrix) <- df$disease
-#dist_matrix <- as.dist(1 - cor_matrix)
-hc <- Whclust(x,df$w)
-tree <- as.phylo(hc)
-tree$tip.label = df$disease
-labdata = data.frame(label = df$disease)
-#labdata$label[labdata$label=="Inflammation of unknown origin"] = "Inflammation of<br>unknown origin"
-
-p2 <- ggtree(tree, layout = "rectangular") %<+% labdata +
-  geom_tiplab(aes(label = label), offset = 0) +
-  scale_x_continuous(limits = c(0,2050))+
-  #geom_text(label="A",x=0.1,y=0.9,size=5,family=font)+
-  theme(plot.margin = unit(c(0, 0, 0, 0), "mm"),
-        panel.background  = element_rect(color = "black", fill = "lightgray", linewidth = 1))
-
-# Adicionar as legendas
-p2 <- add_labels(p2, labdata)
-# p2 <- ggtree(tree, layout="rectangular") %<+% labdata
-# p2 = p2 + geom_tiplab(aes(label = label, color = color), hjust = 0,offset = 0.5) +
-#   scale_color_identity()+
-#   theme(plot.margin = unit(c(1,1,1,1),"mm"))
-final_plot <- p1 +
-  inset_element(p2, left = 0.5, bottom = 0.05, right = 0.95, top = 0.25)
-
-# Exibir o gr?fico final
 
