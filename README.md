@@ -40,8 +40,8 @@ Code used in analyse for the paper:
   * **auc_curv.py** : Execute evaluation of models in relation to increase the number of relevant marks.
    
 ## Necessary repositories
-
-* **plotly** : version 5.13.1
-* **python** : version 3.9.16
-* **pandas** : version  1.5.3
-* **sklearn** : version 1.2.1
+* **R** : version 4.4.0
+*  **python** : version 3.9.18
+*  **numpy** : version 1.23.5
+* **pandas** : version  1.5.3 
+* **scikit-learn** : version 1.2.1
