@@ -282,29 +282,29 @@ def rf_imp1():
     data.to_csv("./result/RF_imp.csv",index=False)
 
 lr_auc()
-#rf_res()
-#rf_auc()
-#rf_imp1()
+rf_res()
+rf_auc()
+rf_imp1()
 
 
-# df = py.read_r("./pos_data/data_nor.rds")[None]
-# df["sex"]=pd.get_dummies(df["sex"]).iloc[:,0]
-# catego = list(df["disease"].cat.categories)
-# catego.remove("Healthy")
-# df = df.loc[df.disease!="Healthy"]
-# del df["id"]
-# del df["batch"]          
-# y = df["disease"]
-# x = df
-# del x["disease"]
-# col = x.columns
-# rf = RandomForestClassifier(max_depth=8,n_jobs=n_jobs,n_estimators=5001,oob_score=True,random_state=seed)
-# rf.fit(x,y)
-# data = pd.DataFrame({"vari":col,"imp":rf.feature_importances_})
-# data.loc[data["vari"]!="sex"]
-# data.loc[data["vari"]!="age"]
-# data.sort_values("imp",ascending=False,inplace=True)
-# data.to_csv("./result/RF_imp2.csv",index=False)
+df = py.read_r("./pos_data/data_nor.rds")[None]
+df["sex"]=pd.get_dummies(df["sex"]).iloc[:,0]
+catego = list(df["disease"].cat.categories)
+catego.remove("Healthy")
+df = df.loc[df.disease!="Healthy"]
+del df["id"]
+del df["batch"]          
+y = df["disease"]
+x = df
+del x["disease"]
+col = x.columns
+rf = RandomForestClassifier(max_depth=8,n_jobs=n_jobs,n_estimators=5001,oob_score=True,random_state=seed)
+rf.fit(x,y)
+data = pd.DataFrame({"vari":col,"imp":rf.feature_importances_})
+data.loc[data["vari"]!="sex"]
+data.loc[data["vari"]!="age"]
+data.sort_values("imp",ascending=False,inplace=True)
+data.to_csv("./result/RF_imp2.csv",index=False)
 
 
 
