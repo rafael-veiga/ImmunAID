@@ -8,7 +8,7 @@ Code used in analyse for the paper:
 * [Files description](#files-description)
 * [Necessary repositories](#necessary-repositories)
 ## Dataset description
- disponible at /pos_data/ImmunAID.csv
+ disponible at Supplementary Spreadsheet 2.csv
  
  187 cases, 212 variables
  
