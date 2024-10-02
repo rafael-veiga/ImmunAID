@@ -1,6 +1,14 @@
 
 source("functions_pre.R")
 df_raw_t = readRDS(file = "./pos_data/data_raw.rds")
+df_raw_t = df_raw_t %>% 
+  mutate(disease = case_when(
+    disease=="Inflammation of unknown origin" ~ "Autoinflammation of unknown origin",
+    disease=="AOSD" ~ "Still's disease",
+    TRUE ~ disease
+    ))
+
+
 
 ### select disease
 

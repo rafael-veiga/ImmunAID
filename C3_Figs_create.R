@@ -22,12 +22,12 @@ font ="serif"
 
 #####################################################################################################################
 color_eu = c("Healthy" ="#66CD00",
-             "Inflammation of unknown origin" = "#009ACD",
-             "AOSD"="#FF4500",
+             "Autoinflammation of unknown origin" = "#009ACD",
+             "Still's disease"="#FF4500",
              "FMF"="#9A32CD",
              "Behcet"="#F5E400")
 #####################################################
-dis = list(var = c("Healthy","Inflammation of unknown origin","AOSD","FMF","Behcet"),
+dis = list(var = c("Healthy","Autoinflammation of unknown origin","Still's disease","FMF","Behcet"),
            size = c(NA,40,82,55,61),
            color = color_eu[1:5],
            ref1 = c(NA,"CD38+ CD8+ T Cells in CD8+ T Cells",
@@ -143,6 +143,12 @@ for(i in 2:5){
 fig_c = list()
 fig_c[[1]] = NA
 df = readRDS(file = "./pos_data/data_raw.rds")
+df = df %>% 
+  mutate(disease = case_when(
+    disease=="Inflammation of unknown origin" ~ "Autoinflammation of unknown origin",
+    disease=="AOSD" ~ "Still's disease",
+    TRUE ~ disease
+  ))
 df = df[df$disease %in% dis$var,]
 df$disease = factor(df$disease,levels = dis$var)
 
@@ -441,7 +447,7 @@ for (i in 1:length(doencas)) {
   }
 }
 
-pdf("fig5.pdf",width = 18,height = 16)
+pdf("fig5.pdf",width = 20,height = 16)
 print(do.call(gridExtra::grid.arrange, c(plot_list, ncol = length(doencas))))
 dev.off()
 
@@ -452,6 +458,12 @@ res = res[res!="age"]
 res = res[res!="sex"]
 res = res[1:16]
 df = readRDS(file = "./pos_data/data_raw.rds")
+df = df %>% 
+  mutate(disease = case_when(
+    disease=="Inflammation of unknown origin" ~ "Autoinflammation of unknown origin",
+    disease=="AOSD" ~ "Still's disease",
+    TRUE ~ disease
+  ))
 df = df[df$disease %in% dis$var,]
 df$disease = factor(df$disease,levels = dis$var)
 df = df %>% select(c("disease",res))

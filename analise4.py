@@ -14,7 +14,7 @@ from sklearn.model_selection import StratifiedKFold
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_curve, auc,roc_auc_score
 from joblib import Parallel, delayed
-n_jobs = 4
+n_jobs = 16
 seed = 12345
 
 
@@ -65,7 +65,7 @@ def compute_auc(x, y, LR, skf):
         aucs[cv] = roc_auc_score(y[test_index], yhat)
     return np.mean(aucs)
 
-dis = {"Inflammation of unknown origin":40,"AOSD":82,"FMF":55,"Behcet":61}
+dis = {"Autoinflammation of unknown origin":40,"Still's disease":82,"FMF":55,"Behcet":61}
 
 def calculate_auc_vs_n():
     df = py.read_r("./pos_data/data_nor.rds")[None]
@@ -74,7 +74,7 @@ def calculate_auc_vs_n():
     catego.remove("Healthy")
     del df["id"]
     del df["batch"]
-    dis = {"Inflammation of unknown origin": 15,"AOSD":26,"FMF":7,"Behcet":15}
+    dis = {"Autoinflammation of unknown origin": 15,"Still's disease":26,"FMF":7,"Behcet":15}
     skf = StratifiedKFold(n_splits=5,random_state=seed,shuffle=True)
     LR = LogisticRegression(C=0.1,penalty="l2",solver="liblinear",max_iter=1000)
     data = pd.DataFrame()

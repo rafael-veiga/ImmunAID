@@ -23,7 +23,7 @@ def compute_auc(x, y, LR, skf):
         aucs[cv] = roc_auc_score(y[test_index], yhat)
     return np.mean(aucs)
 
-dis = {"Inflammation of unknown origin":40,"AOSD":82,"FMF":55,"Behcet":61}
+dis = {"Autoinflammation of unknown origin":40,"Still's disease":82,"FMF":55,"Behcet":61}
 
 def calculate_auc_vs_n():
     df = py.read_r("./pos_data/data_nor.rds")[None]
@@ -32,7 +32,7 @@ def calculate_auc_vs_n():
     catego.remove("Healthy")
     del df["id"]
     del df["batch"]
-    dis = {"Inflammation of unknown origin": 15,"AOSD":26,"FMF":7,"Behcet":15}
+    dis = {"Autoinflammation of unknown origin": 15,"Still's disease":26,"FMF":7,"Behcet":15}
     skf = StratifiedKFold(n_splits=5,random_state=seed,shuffle=True)
     LR = LogisticRegression(C=0.1,penalty="l2",solver="liblinear",max_iter=1000)
     data = pd.DataFrame()
@@ -70,7 +70,7 @@ def calculate_auc_vs_n():
     
     data.to_csv("./result/table/auc_n.csv",index=False)
 
-#calculate_auc_vs_n()
+calculate_auc_vs_n()
 
 
 
