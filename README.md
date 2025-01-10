@@ -42,10 +42,12 @@ Code used in analyse for the paper:
   * **analise4.py** : Execute estimation of diferent model generalization and behave.
   * **auc_curv.py** : Execute evaluation of models in relation to increase the number of relevant marks.
    
-## Necessary repositories
+## Dependences
+This code was tested on linux and windows machines.
+The follow softwares and packadges are necessary:
 * **R** : version 4.4.0
-*  **python** : version 3.9.18
-*  **numpy** : version 1.23.5
+* **python** : version 3.9.18
+* **numpy** : version 1.23.5
 * **pandas** : version  1.5.3 
 * **scikit-learn** : version 1.2.1
 
