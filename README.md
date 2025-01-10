@@ -29,7 +29,7 @@ Code used in analyse for the paper:
     * Transformation
     * Normalization
     * Imputation.
- * **A2_save_raw_data_csv.R** : Script execute transformations on provide dataset:
+  * **A2_save_raw_data_csv.R** : Script execute transformations on provide dataset:
     * Transformation
     * Normalization
     * Imputation. 
@@ -47,9 +47,9 @@ This code was tested on linux and windows machines.
 The follow softwares and packadges are necessary:
 * **R** : version 4.4.0
 * **python** : version 3.9.18
-* **numpy** : version 1.23.5
-* **pandas** : version  1.5.3 
-* **scikit-learn** : version 1.2.1
+ * **numpy** : version 1.23.5
+ * **pandas** : version  1.5.3 
+ * **scikit-learn** : version 1.2.1
 
 ## Instruction To Run
 * **1 - Download data** : from the repository http://flowrepository.org/id/FR-FCM-Z662 download the file **data_raw.rds** and put inside **pos_data** folder 
