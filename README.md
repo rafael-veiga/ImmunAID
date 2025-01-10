@@ -43,7 +43,7 @@ Code used in analyse for the paper:
   * **auc_curv.py** : Execute evaluation of models in relation to increase the number of relevant marks.
    
 ## Dependences
-This code was tested on linux and windows machines.
+This code was tested on linux and windows machines. A standart computer is suficient to run all analisys and should not take more than hours for each step.
 The follow softwares and packadges are necessary:
 * **R** : version 4.4.0
 * **python** : version 3.9.18
