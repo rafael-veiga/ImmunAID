@@ -50,4 +50,10 @@ Code used in analyse for the paper:
 * **scikit-learn** : version 1.2.1
 
 ## Instruction To Run
-* **Download data** : from the repository 
+* **1 - Download data** : from the repository http://flowrepository.org/id/FR-FCM-Z662 download the file **data_raw.rds** and put inside **pos_data** folder 
+* **2 - Run A1_pre_process_data_analise.R** : execute all file content in R.
+* **3 - Run A2_save_raw_data_csv.R** : execute all file content in R.
+* **4 - Run B3_Descriptive_table.R** : execute all file content in R.
+* **5 - Run C3_Figs_create.R** : execute in R **Base** and **Part1**.
+* **6 - run analise4.py** : execupe in python all content
+* **7 - Run C3_Figs_create.R** : execute in R **Base** and **Part2**.
