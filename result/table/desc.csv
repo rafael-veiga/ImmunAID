@@ -1,0 +1,6 @@
+disease,N,gender_me,gender_p,age_median,age_iqr,age_p,min,max
+Healthy,58,31(53.4%),---,30.0,13.8,---,10.0,59.0
+Autoinflammation of unknown origin,36,17(47.2%),0.665,44.5,32.0,0.425,1.0,76.0
+FMF,35,23(65.7%),0.190,26.0,24.0,0.321,3.0,74.0
+Still's disease,35,25(71.4%),0.121,30.0,12.5,0.855,16.0,66.0
+Behcet,23,9(39.1%),0.323,23.0,23.0,0.126,6.0,58.0
