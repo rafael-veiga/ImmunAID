@@ -34,7 +34,7 @@ Code used in analyse for the paper:
     * Normalization
     * Imputation. 
   * **B3_Descriptive_table.R** : Construct Table 1:
-  * **C3_Figs_create.R** : Construct all paper Figures and evaluate logistic regression immunologic marks odds ration. Divide in 3 parts:
+  * **C3_Figs_create.R** : Construct all paper Figures and evaluate logistic regression immunologic marks odds ration. Split in 3 parts:
     * Base: load librarys, functions and definitions. (always need to run before the nexts parts).
     * Part 1: calculate magnitude of effect in each disiase for each immunological marker. the estimeted effect is avalieted by odds ration estimated by logistic regression.
     * Part 2: create all figures of the paper (it is necessary to run after Part 1 all python scripts before execute Part 2).
@@ -48,3 +48,6 @@ Code used in analyse for the paper:
 *  **numpy** : version 1.23.5
 * **pandas** : version  1.5.3 
 * **scikit-learn** : version 1.2.1
+
+## Instruction To Run
+* **Download data** : from the repository 
