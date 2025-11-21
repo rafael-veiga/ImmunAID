@@ -1,7 +1,7 @@
 # ImmunAID
 Code used in analyse for the paper:
 
-**Patients with inflammation of unknown origin phenocopy the immune presentation of adult onset Still disease**
+**Adult patients with autoinflammation of unknown origin partially phenocopy the immune presentation of Still’s disease**
   
 ## Dependences
 - **Docker** (https://www.docker.com/)
