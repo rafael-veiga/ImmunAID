@@ -1,0 +1,453 @@
+ImmunAID_identifier,Disease,Age,Sex
+01001,AOSD,29,Female
+01002,AOSD,35,Female
+01003,Chronic/recurrent osteitis,47,Female
+01004,AOSD,57,Male
+01005,Negative control,53,Female
+01006,Schnitzler,64,Male
+01007,AOSD,41,Male
+01008,AOSD,39,Male
+01009,HIDS,38,Male
+01010,AOSD,19,Female
+01011,AOSD,33,Female
+01012,AOSD,23,Female
+01013,Negative control,45,Male
+01014,AOSD,23,Female
+01015,AOSD,30,Female
+01016,Negative control,50,Male
+01017,AOSD,30,Female
+01018,Negative control,42,Female
+01019,Negative control,43,Female
+01020,Negative control,59,Female
+02003,SOJIA,11,Female
+02004,Recurrent Pericarditis,12,Male
+02005,Inflammation of unknown origin,12,Male
+02006,SOJIA,15,Male
+02007,Chronic/recurrent osteitis,16,Male
+02008,Behcet (Vasculitis),6,Female
+03002,Sweet syndrome (Neutrophilic dermatosis),50,Female
+03003,Pyoderma gangrenosum (Neutrophilic dermatosis),75,Female
+03004,Pyoderma gangrenosum (Neutrophilic dermatosis),57,Male
+03005,AOSD,27,Male
+03006,Pyoderma gangrenosum (Neutrophilic dermatosis),67,Male
+03007,Pyoderma gangrenosum (Neutrophilic dermatosis),91,Male
+04001,AOSD,29,Female
+04002,AOSD,29,Female
+04004,AOSD,37,Male
+04005,AOSD,32,Female
+04006,FMF,70,Male
+04007,FMF,46,Male
+04008,FMF,42,Female
+04009,Inflammation of unknown origin,34,Female
+04010,Inflammation of unknown origin,21,Female
+04011,FMF,40,Female
+04012,Inflammation of unknown origin,45,Male
+04013,Inflammation of unknown origin,44,Female
+04014,FMF,68,Female
+04015,FMF,23,Female
+04017,Inflammation of unknown origin,27,Female
+04018,FMF,43,Female
+04019,Inflammation of unknown origin,27,Female
+04020,Inflammation of unknown origin,44,Female
+04021,FMF,21,Female
+04022,FMF,17,Female
+04023,Chronic/recurrent osteitis,17,Male
+04024,CAPS,30,Male
+04025,FMF,64,Female
+04026,FMF,76,Female
+04028,Inflammation of unknown origin,23,Female
+04029,FMF,39,Female
+04030,TRAPS,61,Female
+04031,CAPS,56,Female
+04032,TRAPS,36,Male
+04033,HIDS,28,Male
+04034,FMF,22,
+04035,CAPS,44,Male
+04036,HIDS,35,Male
+04037,FMF,24,Female
+04038,TRAPS,57,Female
+04039,FMF,23,Female
+04040,FMF,72,Male
+04041,CAPS,68,Female
+04042,TRAPS,59,Female
+04043,FMF,65,Female
+04044,FMF,23,Female
+04045,TRAPS,42,Female
+04046,FMF,36,Female
+04047,FMF,62,Female
+04048,HIDS,34,Female
+04049,Inflammation of unknown origin,20,Female
+04050,TRAPS,73,Female
+04051,FMF,47,Female
+04052,FMF,58,Female
+04053,FMF,19,Female
+04054,Negative control,25,Female
+04055,Negative control,31,Male
+04056,Negative control,36,Female
+04057,Negative control,31,Female
+04058,Negative control,27,Male
+04059,Negative control,28,Male
+04060,Negative control,28,Female
+04061,Negative control,26,Female
+04062,Negative control,29,Female
+04063,Negative control,32,Female
+04064,Negative control,44,Female
+04065,Negative control,26,Male
+04066,Negative control,35,Female
+04067,Sweet syndrome (Neutrophilic dermatosis),16,Female
+04068,Negative control,50,Male
+04069,Negative control,27,Male
+05001,Chronic/recurrent osteitis,35,Female
+05002,Chronic/recurrent osteitis,74,Female
+05003,Chronic/recurrent osteitis,56,Female
+05004,Chronic/recurrent osteitis,44,Female
+05005,Chronic/recurrent osteitis,36,Female
+05006,Chronic/recurrent osteitis,48,Male
+06001,Kawasaki (Vasculitis),1,Female
+06002,CAPS,3,Male
+06003,SOJIA,4,Female
+06004,TRAPS,13,Male
+06005,Chronic/recurrent osteitis,13,Female
+06006,Takayasu (Vasculitis),14,Female
+06008,Chronic/recurrent osteitis,9,Female
+06009,Chronic/recurrent osteitis,14,Male
+06010,HIDS,1,Male
+06011,PIMS,4,Male
+06012,PIMS,4,Male
+06013,PIMS,3,Male
+06014,FMF,12,Male
+06015,FMF,11,Male
+06016,Chronic/recurrent osteitis,9,Male
+06017,Inflammation of unknown origin,12,Male
+06018,Chronic/recurrent osteitis,14,Female
+06019,Inflammation of unknown origin,10,Female
+06020,FMF,7,Male
+06021,FMF,6,Male
+06022,FMF,16,Female
+06023,Chronic/recurrent osteitis,3,Male
+06024,Chronic/recurrent osteitis,9,Female
+06025,Chronic/recurrent osteitis,8,Female
+06026,Kawasaki (Vasculitis),2,Male
+06027,Chronic/recurrent osteitis,18,Female
+06028,Chronic/recurrent osteitis,10,Female
+06029,Behcet (Vasculitis),18,Male
+06030,HIDS,10,Male
+06031,Kawasaki (Vasculitis),3,Female
+06032,Chronic/recurrent osteitis,8,Female
+06033,HIDS,0,Female
+06035,Chronic/recurrent osteitis,14,Female
+06036,Chronic/recurrent osteitis,15,Female
+06037,PIMS,5,Male
+06038,PIMS,7,
+06039,PIMS,7,Female
+06040,PIMS,10,Female
+06041,HIDS,5,Male
+06042,PIMS,11,Female
+06043,Chronic/recurrent osteitis,9,Female
+06044,PIMS,8,Female
+06045,FMF,4,Male
+06046,Inflammation of unknown origin,3,Female
+06047,Chronic/recurrent osteitis,9,Female
+06048,HIDS,8,Male
+06049,PIMS,15,Female
+06050,PIMS,6,Male
+06051,SOJIA,10,Female
+06052,Chronic/recurrent osteitis,9,Female
+06053,PIMS,8,Female
+06054,Chronic/recurrent osteitis,7,Male
+06055,Chronic/recurrent osteitis,9,Male
+06056,AOSD,6,Female
+06057,FMF,8,Female
+06058,Inflammation of unknown origin,15,
+06059,FMF,17,Male
+06061,Kawasaki (Vasculitis),0,Male
+06062,Chronic/recurrent osteitis,4,Female
+06063,Kawasaki (Vasculitis),5,
+06064,Inflammation of unknown origin,5,Male
+06065,HIDS,16,Female
+07001,FMF,33,Male
+07002,Behcet (Vasculitis),39,Female
+07004,Inflammation of unknown origin,46,Female
+07005,Takayasu (Vasculitis),73,Female
+07006,AOSD,48,Female
+07007,Behcet (Vasculitis),36,Male
+07008,Inflammation of unknown origin,58,Female
+07009,Behcet (Vasculitis),43,Male
+07010,Recurrent Pericarditis,35,Female
+07011,Behcet (Vasculitis),45,Male
+07012,Behcet (Vasculitis),20,Female
+07013,Behcet (Vasculitis),18,Female
+07014,Behcet (Vasculitis),44,Male
+07015,Behcet (Vasculitis),18,Female
+07016,Takayasu (Vasculitis),53,Female
+07017,Behcet (Vasculitis),23,Male
+07018,Behcet (Vasculitis),31,Female
+07019,Behcet (Vasculitis),22,Male
+07020,Behcet (Vasculitis),17,Female
+07021,Behcet (Vasculitis),40,Male
+07022,Recurrent Pericarditis,42,Female
+07023,AOSD,28,Male
+07024,Behcet (Vasculitis),42,Male
+07025,Behcet (Vasculitis),36,Male
+07026,Takayasu (Vasculitis),29,Female
+08001,SOJIA,8,Male
+08002,Inflammation of unknown origin,14,Male
+08003,SOJIA,4,Female
+08004,Behcet (Vasculitis),16,Male
+08005,CAPS,2,Female
+08006,CAPS,2,Female
+08007,Recurrent Pericarditis,16,Female
+08008,Negative control,33,Female
+08009,Negative control,24,Female
+08010,Negative control,15,Male
+08011,Negative control,22,Female
+08012,Negative control,46,Female
+08013,Negative control,26,Female
+08014,SOJIA,6,Male
+08015,Negative control,14,Female
+09001,AOSD,27,Male
+09002,AOSD,35,Female
+09003,AOSD,44,Male
+09005,Behcet (Vasculitis),58,Male
+09007,AOSD,26,Female
+09008,FMF,22,Male
+09009,AOSD,35,Female
+10001,Schnitzler,87,Female
+10002,AOSD,35,Male
+10003,AOSD,63,Female
+10004,Takayasu (Vasculitis),67,Female
+10005,Behcet (Vasculitis),20,Male
+10006,AOSD,36,Female
+10007,AOSD,42,Female
+12001,AOSD,56,Male
+12002,Inflammation of unknown origin,30,Male
+12003,AOSD,33,Male
+12004,AOSD,43,Male
+13001,AOSD,63,Female
+13003,Inflammation of unknown origin,63,Male
+13004,Takayasu (Vasculitis),32,Female
+13005,AOSD,30,Female
+13006,Behcet (Vasculitis),38,Male
+13007,Chronic/recurrent osteitis,44,Female
+13008,Inflammation of unknown origin,45,Male
+13009,Takayasu (Vasculitis),44,Female
+13010,AOSD,35,Female
+13011,Inflammation of unknown origin,25,Female
+13012,CAPS,41,Male
+13013,CAPS,16,Male
+13014,CAPS,11,Female
+13015,CAPS,11,Male
+13016,AOSD,66,Male
+13017,FMF,38,Female
+13018,Inflammation of unknown origin,49,Female
+13019,AOSD,25,Female
+13020,Inflammation of unknown origin,48,Male
+13021,AOSD,32,Female
+13022,Schnitzler,68,Male
+13023,FMF,25,Female
+13024,AOSD,38,Female
+13025,Inflammation of unknown origin,44,Male
+13026,Sweet syndrome (Neutrophilic dermatosis),31,Female
+13027,Inflammation of unknown origin,41,Male
+14001,Schnitzler,79,Female
+14002,AOSD,51,Male
+14003,Recurrent Pericarditis,15,Female
+14004,AOSD,16,Female
+14005,Inflammation of unknown origin,4,Male
+14006,CAPS,21,Male
+14008,FMF,21,Female
+14009,Schnitzler,76,Female
+14010,AOSD,27,Female
+16001,Takayasu (Vasculitis),42,Male
+16002,Behcet (Vasculitis),43,Male
+16003,Behcet (Vasculitis),53,Male
+16004,Behcet (Vasculitis),46,Male
+16005,Takayasu (Vasculitis),29,Female
+16006,Behcet (Vasculitis),21,Male
+16007,Behcet (Vasculitis),51,Male
+17001,Behcet (Vasculitis),33,Female
+17002,Takayasu (Vasculitis),32,Female
+17003,SOJIA,2,Female
+17004,Inflammation of unknown origin,9,Male
+17005,Behcet (Vasculitis),46,Male
+17006,Takayasu (Vasculitis),57,Female
+17007,HIDS,20,Male
+17008,Takayasu (Vasculitis),50,Female
+17009,Behcet (Vasculitis),33,Female
+17010,SOJIA,1,Female
+17011,Takayasu (Vasculitis),40,Female
+17012,AOSD,22,Male
+17013,Chronic/recurrent osteitis,24,Male
+18001,Negative control,24,Male
+18002,Chronic/recurrent osteitis,17,Female
+18003,Negative control,39,Female
+18004,Negative control,40,Male
+18005,Recurrent Pericarditis,17,Female
+18006,Inflammation of unknown origin,76,Female
+18007,Negative control,55,Female
+18008,AOSD,31,Female
+18009,FMF,74,Male
+18010,Negative control,31,Male
+18011,AOSD,30,Female
+19001,Chronic/recurrent osteitis,5,Male
+20001,Chronic/recurrent osteitis,12,Male
+20002,Chronic/recurrent osteitis,11,Female
+20003,Chronic/recurrent osteitis,10,Female
+20004,Negative control,30,Female
+20005,Negative control,34,Female
+20006,Negative control,37,Male
+20007,Negative control,37,Female
+20008,Kawasaki (Vasculitis),2,Female
+20009,Negative control,11,Female
+20010,Chronic/recurrent osteitis,8,Male
+20011,Chronic/recurrent osteitis,17,Male
+20012,SOJIA,14,Male
+20013,Chronic/recurrent osteitis,10,Male
+20014,SOJIA,6,Male
+20015,Chronic/recurrent osteitis,13,Female
+20016,Inflammation of unknown origin,13,Female
+20018,Negative control,27,Female
+20019,Negative control,27,Female
+20020,Negative control,26,Male
+20021,SOJIA,3,Male
+20022,Chronic/recurrent osteitis,14,Female
+20023,Negative control,26,Female
+20024,Chronic/recurrent osteitis,15,Male
+20025,Kawasaki (Vasculitis),4,Male
+20026,Chronic/recurrent osteitis,12,Male
+21001,Inflammation of unknown origin,11,Female
+21002,CAPS,35,
+21003,Inflammation of unknown origin,56,Female
+21004,Behcet (Vasculitis),15,Female
+21005,Behcet (Vasculitis),9,Male
+21006,FMF,53,Male
+21007,Chronic/recurrent osteitis,14,Male
+22001,Negative control,38,Male
+22002,Negative control,49,Female
+24001,Schnitzler,48,Female
+24002,Inflammation of unknown origin,46,Female
+24003,Chronic/recurrent osteitis,12,Female
+24004,Schnitzler,48,Male
+24005,Inflammation of unknown origin,47,Male
+24006,Inflammation of unknown origin,67,Male
+24007,Inflammation of unknown origin,57,Female
+24008,Inflammation of unknown origin,63,Female
+24009,FMF,30,Female
+24010,CAPS,35,Female
+24011,Negative control,59,Male
+24012,Inflammation of unknown origin,14,Male
+24013,Negative control,23,Female
+24014,Negative control,31,Male
+24015,Inflammation of unknown origin,50,Female
+25001,AOSD,25,Male
+25002,FMF,26,Female
+25003,FMF,34,Female
+25004,Inflammation of unknown origin,37,Female
+25005,Negative control,26,Male
+25006,Inflammation of unknown origin,5,Female
+25008,AOSD,50,Male
+25009,Behcet (Vasculitis),50,Female
+25010,Behcet (Vasculitis),29,Male
+25011,Inflammation of unknown origin,40,Female
+25012,AOSD,42,Female
+25013,Inflammation of unknown origin,53,Female
+25014,Behcet (Vasculitis),22,Male
+25015,Negative control,39,Male
+25016,Inflammation of unknown origin,25,Female
+25017,Negative control,44,Female
+25018,FMF,53,Female
+25019,FMF,78,Male
+25020,Negative control,29,Male
+25021,FMF,42,Female
+25022,Recurrent Pericarditis,65,Female
+25023,AOSD,22,Female
+25024,AOSD,30,Male
+25025,Inflammation of unknown origin,64,Female
+25026,Negative control,44,Female
+25027,FMF,47,Female
+25028,AOSD,75,Male
+25029,HIDS,18,Female
+25030,Inflammation of unknown origin,30,Female
+25031,FMF,46,Female
+25032,Inflammation of unknown origin,72,Male
+25033,HIDS,42,Female
+25034,Recurrent Pericarditis,50,Male
+25035,Negative control,32,Male
+26001,Recurrent Pericarditis,12,Male
+26002,Sweet syndrome (Neutrophilic dermatosis),3,Male
+26003,Kawasaki (Vasculitis),5,Male
+26004,FMF,3,Male
+26005,Kawasaki (Vasculitis),3,Male
+26006,SOJIA,11,Female
+26007,Kawasaki (Vasculitis),2,Female
+26008,Inflammation of unknown origin,1,Female
+26009,SOJIA,9,Female
+26101,Negative control,28,Male
+26102,AOSD,36,Male
+26103,Chronic/recurrent osteitis,26,Male
+26104,Inflammation of unknown origin,50,Male
+26105,Negative control,38,Male
+26106,Schnitzler,66,Female
+26107,AOSD,23,Male
+26108,Inflammation of unknown origin,32,Female
+26109,Recurrent Pericarditis,24,Female
+26110,AOSD,23,Male
+27001,Recurrent Pericarditis,21,Female
+27002,Chronic/recurrent osteitis,8,Female
+27003,Chronic/recurrent osteitis,19,Female
+27004,Chronic/recurrent osteitis,10,Female
+27005,Inflammation of unknown origin,4,Male
+27006,Chronic/recurrent osteitis,12,Female
+27007,SOJIA,12,Male
+27008,SOJIA,11,Male
+27009,Chronic/recurrent osteitis,12,Female
+27010,Chronic/recurrent osteitis,7,Female
+27011,Recurrent Pericarditis,15,Male
+27012,SOJIA,3,Female
+27013,SOJIA,9,Male
+27014,Chronic/recurrent osteitis,14,Male
+27015,Negative control,10,Male
+28001,Recurrent Pericarditis,16,Male
+28002,Recurrent Pericarditis,32,Male
+28004,Recurrent Pericarditis,18,Male
+28006,Recurrent Pericarditis,46,Male
+28007,Inflammation of unknown origin,49,Female
+28008,Negative control,47,Male
+28009,Recurrent Pericarditis,48,Male
+28010,AOSD,37,Female
+28011,Inflammation of unknown origin,20,Female
+28012,Inflammation of unknown origin,2,Male
+28013,Recurrent Pericarditis,27,Female
+28014,Inflammation of unknown origin,52,Male
+28015,Recurrent Pericarditis,14,Male
+28016,Inflammation of unknown origin,20,Male
+28017,Negative control,24,Male
+28018,Negative control,37,Male
+28019,Negative control,25,Female
+28020,Negative control,26,Male
+28021,Negative control,27,Male
+28022,Negative control,30,Male
+29002,Negative control,27,Male
+33001,Schnitzler,72,Male
+33002,Inflammation of unknown origin,42,Male
+33003,Negative control,29,Male
+33004,Negative control,28,Male
+33005,Sweet syndrome (Neutrophilic dermatosis),52,Male
+33006,Takayasu (Vasculitis),55,Female
+33007,Takayasu (Vasculitis),47,Male
+34001,Schnitzler,58,Female
+34002,Negative control,29,Female
+34003,CAPS,30,Female
+34004,Schnitzler,76,Female
+34005,TRAPS,29,Male
+35001,Chronic/recurrent osteitis,13,Female
+35002,FMF,20,Male
+35003,Chronic/recurrent osteitis,9,Male
+35004,Inflammation of unknown origin,21,Male
+35005,Chronic/recurrent osteitis,10,Male
+37001,Negative control,54,Female
+37002,TRAPS,61,Female
+37003,Negative control,15,Male
+37004,Negative control,34,Female
+37005,Negative control,34,Male
+37006,Negative control,55,Female
