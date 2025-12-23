@@ -63,6 +63,7 @@ for(d in 2:5){
   tab1 = tab1[order(tab1$mag,decreasing = TRUE),]
   tab2 = tab2[order(tab2$mag,decreasing = TRUE),]
   tabela = rbind(tab1,tab2)
+  tabela$p_value_adj = p.adjust(tabela$p_value, method = "BH")
   ####################################################
   write.csv(tabela,file=paste0("./mark_f/",dis$var[d] ,".csv"),row.names = FALSE,quote = FALSE)
 }
@@ -100,6 +101,7 @@ for(d in 2:5){
   tab1 = tab1[order(tab1$mag,decreasing = TRUE),]
   tab2 = tab2[order(tab2$mag,decreasing = TRUE),]
   tabela = rbind(tab1,tab2)
+  tabela$p_value_adj = p.adjust(tabela$p_value, method = "BH")
   ########################################################
   write.csv(tabela,file=paste0("./mark_p/",dis$var[d] ,".csv"),row.names = FALSE,quote = FALSE)
 }
