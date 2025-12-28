@@ -161,7 +161,8 @@ process FIG4 {
   input:
   path RF_imp2_f
   path data
-  path rscript        
+  path rscript
+  path mark_f
   
   output:
   path 'fig4.pdf'
@@ -233,7 +234,8 @@ process FIG8 {
   input:
   path RF_imp2_p
   path data
-  path rscript        
+  path rscript
+  path mark_p
   
   output:
   path 'fig8.pdf'
@@ -539,11 +541,11 @@ workflow {
  FIG1(mark_f_ch, auc_n_f_ch, data_ch, auc_curv_f_ch, data_nor_ch, channel.fromPath('scripts/fig1.R'))
  FIG2(mark_f_ch, auc_n_f_ch, data_ch, auc_curv_f_ch, data_nor_ch, channel.fromPath('scripts/fig2.R'))
  FIG3(RF_auc2_f_ch, data_nor_ch, channel.fromPath('scripts/fig3.R'))
- FIG4(RF_imp2_f_ch, data_ch, channel.fromPath('scripts/fig4.R'))
+ FIG4(RF_imp2_f_ch, data_ch, channel.fromPath('scripts/fig4.R'),mark_f_ch)
  FIG5(mark_p_ch, data_ch, auc_n_p_ch, auc_curv_p_ch, data_nor_ch, channel.fromPath('scripts/fig5.R'))
  FIG6(data_ch, mark_p_ch, data_nor_ch, channel.fromPath('scripts/fig6.R'))
  FIG7(RF_auc2_p_ch, data_nor_ch, channel.fromPath('scripts/fig7.R'))
- FIG8(RF_imp2_p_ch, data_ch, channel.fromPath('scripts/fig8.R'))
+ FIG8(RF_imp2_p_ch, data_ch, channel.fromPath('scripts/fig8.R'),mark_p_ch)
  S1(mark_f_ch ,channel.fromPath('scripts/figS1.R'))
  S2(mark_f_ch, auc_n_f_ch, data_ch, auc_curv_f_ch, data_nor_ch, channel.fromPath('scripts/figS2.R'))
  S3(mark_f_ch ,channel.fromPath('scripts/figS3.R'))

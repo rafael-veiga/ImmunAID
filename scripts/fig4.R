@@ -171,11 +171,63 @@ df$disease = factor(df$disease,levels = dis$var)
 df = df %>% select(c("disease","treated",res))
 df = gather(df, marks,value,res)
 df = df[!is.na(df$value),]
-
-
+res_aux = list()
+for(a in 1:4){
+  aux = read.csv(paste0("./mark_f/" ,dis$var[a+1] ,".csv"))
+  aux = aux[aux$col_f %in% res,c("col_f","p_value_adj")]
+  colnames(aux)[2] = paste0("p",a)
+  res_aux[[a]] = aux
+}
+df_aux = tibble(col_f=res)
+for(i in 1:4){
+  df_aux = merge.data.frame(df_aux,res_aux[[i]],by = "col_f")
+}
+df = merge.data.frame(df,df_aux,by.x="marks",by.y = "col_f")
 df$marks = new_labels(df$marks)
 df$marks = factor(df$marks, levels=new_labels(res))
 aux = df
+
+ref <- "Healthy"
+others <- setdiff(dis$var, ref)
+
+comparisons_map <- tibble::tibble(
+  cmp = c("p1","p2","p3","p4"),
+  group1 = ref,
+  group2 = others[1:4]
+)
+
+panel_stats3 <- aux %>%
+  group_by(marks) %>%
+  summarise(
+    y_top = as.numeric(quantile(value, 0.98, na.rm = TRUE)),
+    y_low = as.numeric(quantile(value, 0.02, na.rm = TRUE)),
+    y_rng = y_top - y_low,
+    .groups = "drop"
+  ) %>%
+  mutate(y_rng = ifelse(y_rng <= 0, 1, y_rng))
+p_anno3 <- aux %>%
+  distinct(marks, p1, p2, p3, p4) %>%   # 1 linha por marks
+  pivot_longer(cols = c(p1,p2,p3,p4), names_to = "cmp", values_to = "p.adj") %>%
+  left_join(comparisons_map, by = "cmp") %>%
+  left_join(panel_stats3, by = "marks") %>%
+  mutate(
+    label = ifelse(
+      p.adj < 0.0001,
+      "p < 0.0001",
+      paste0("p = ", formatC(p.adj, format = "f", digits = 4))
+    ),
+    # offsets para empilhar 4 comparações (ajuste se quiser)
+    y.position = y_top + 0.0 * y_rng +
+      case_when(
+        cmp == "p1" ~ 0.00 * y_rng,
+        cmp == "p2" ~ 0.30 * y_rng,
+        cmp == "p3" ~ 0.60 * y_rng,
+        cmp == "p4" ~ 0.90 * y_rng,
+        TRUE ~ 0
+      )
+  ) %>%
+  filter(!is.na(p.adj), p.adj < 0.05)
+
 fig_3 <- aux %>% 
   ggplot(aes(x = disease, y = value, fill = disease)) +
   facet_wrap(~ marks, scales = "free_y", ncol = 2) +
@@ -226,6 +278,21 @@ fig_3 <- aux %>%
     legend.justification = "left",
     legend.direction  = "horizontal",
     plot.margin       = unit(c(0,2,2,2), "mm")
+  )
+
+fig_3 <- fig_3 +
+  scale_y_continuous(expand = expansion(mult = c(0.02, 0.18))) +
+  coord_cartesian(clip = "off") +
+  stat_pvalue_manual(
+    p_anno3,
+    label = "label",
+    tip.length = 0.01,
+    size = 2,
+    hide.ns = TRUE
+  ) +
+  theme(
+    plot.margin = unit(c(6, 2, 2, 2), "mm"),
+    panel.spacing = unit(3, "mm")
   )
 
 pdf("./fig4.pdf",width = 9,height = 12)

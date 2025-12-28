@@ -41,7 +41,7 @@ dis = list(var = c("Healthy","Autoinflammation of unknown origin","Still's disea
            pos_refx1 = c(NA,0.4,0.4,1,0.5),
            pos_refy1 =c(NA,1,1.7,1,1),
            pos_refx2 = c(NA,0.8,0.4,0.9,0.25),
-           pos_refy2 =c(NA,-0.2,0,-0.2,0))
+           pos_refy2 =c(NA,-1,0,-0.2,0))
 new_labels = function(vet){
   aux = sapply(as.character(vet), function(x) {
     x = gsub("\\+", "<sup>+</sup>", x)
@@ -75,6 +75,13 @@ centroid_dist <- function(x, y, groups) {
   # Distância euclidiana entre os centróides
   dist <- sqrt(sum((mu1 - mu2)^2))
   return(dist)
+}
+
+wilcox_p <- function(x, g, a, b) {
+  xa <- x[g == a]; xb <- x[g == b]
+  xa <- xa[is.finite(xa)]; xb <- xb[is.finite(xb)]
+  if (length(xa) < 2 || length(xb) < 2) return(NA_real_)
+  tryCatch(wilcox.test(xa, xb)$p.value, error = function(e) NA_real_)
 }
 
 plot_triangle_dist <- function(labels, d12, d13, d23,
@@ -169,9 +176,17 @@ df$out[df$disease == dis$var[i] & !is.na(df$treated) & df$treated == 1] ="off-tr
 df$out = factor(df$out,levels = c("Healthy","off-treatment","treatment naïve"))
 
 res = read.csv(paste0("./mark_f/" ,dis$var[i] ,".csv"))
-res = res[res$p_value<=0.05,]
-res = res$col_f[1:10]
+###
+markers <- res$col_f
+res$p_off   <- vapply(markers, function(m) wilcox_p(df[[m]], df$out, "off-treatment", "Healthy"), numeric(1))
+res$p_naive <- vapply(markers, function(m) wilcox_p(df[[m]], df$out, "off-treatment", "treatment naïve"), numeric(1))
 
+###
+res = res[res$p_value<=0.05,]
+res_aux = res[1:10,]
+res$p_off   <- p.adjust(res$p_off, method = "BH")
+res$p_naive <- p.adjust(res$p_naive, method = "BH")
+res = res$col_f[1:10]
 colu = c("out",res)
 aux = df[,colu]
 aux = aux[!is.na(aux$out),]
@@ -179,13 +194,47 @@ aux = gather(aux, marks,value,res)
 aux = aux[!is.na(aux$value), ]
 aux$marks = new_labels(aux$marks)
 aux$marks = factor(aux$marks, levels=new_labels(res))
-fig_a=aux %>% ggplot(aes(x=out,y=value,fill = out))+
+###
+panel_stats <- aux %>%
+  group_by(marks) %>%
+  summarise(
+    y_top = as.numeric(quantile(value, 0.98, na.rm = TRUE)),   # topo robusto
+    y_low = as.numeric(quantile(value, 0.02, na.rm = TRUE)),   # base robusta
+    y_rng = y_top - y_low,
+    .groups = "drop"
+  ) %>%
+  mutate(y_rng = ifelse(y_rng <= 0, 1, y_rng))
+
+p_anno <- res_aux %>%
+  transmute(
+    marks  = new_labels(col_f),
+    p_off  = p_off,
+    p_naive = p_naive
+  ) %>%
+  pivot_longer(cols = c(p_off, p_naive), names_to = "cmp", values_to = "p.adj") %>%
+  mutate(
+    group1 = "off-treatment",
+    group2 = ifelse(cmp == "p_off", "Healthy", "treatment naïve"),
+    label = ifelse(
+      p.adj < 0.0001,
+      "p < 0.0001",
+      paste0("p = ", formatC(p.adj, format = "f", digits = 4))
+    )
+  ) %>%
+  left_join(panel_stats, by = "marks") %>%
+  mutate(
+    # sempre perto do topo "visual" do painel
+    y.position = y_top + 0.20 * y_rng +
+      ifelse(group2 == "treatment naïve", 0.26 * y_rng, 0)
+  ) %>%
+  filter(!is.na(p.adj), p.adj < 0.05)
+
+fig_a = aux %>% ggplot(aes(x=out,y=value,fill = out))+
   facet_wrap( ~ marks,scales = "free_y",ncol = 2 )+
   geom_violin(scale = "width",trim = FALSE,draw_quantiles = c(0.5))+
   geom_jitter(width = 0.2,height = 0,size=1)+
-  #scale_x_discrete(limits = dis$var)+
-  #scale_y_continuous(limits = c(0,100))+
-  scale_fill_manual(values=c(dis$color[1],"off-treatment"="pink2","treatment naïve"=dis$color[i][[1]]),limits = c("Healthy","off-treatment","treatment naïve"))+
+  scale_fill_manual(values=c(dis$color[1],"off-treatment"="pink2","treatment naïve"=dis$color[i][[1]]),
+                    limits = c("Healthy","off-treatment","treatment naïve"))+
   labs(x=element_blank(),y = "Quantification")+
   theme_bw(base_family =font)+
   theme(axis.title.x=element_blank(),
@@ -201,6 +250,22 @@ fig_a=aux %>% ggplot(aes(x=out,y=value,fill = out))+
         legend.justification='left',
         legend.direction='horizontal',
         plot.margin = unit(c(0,2,2,2),"mm"))
+
+fig_a <- fig_a +
+  scale_y_continuous(expand = expansion(mult = c(0.02, 0.18))) +
+  coord_cartesian(clip = "off") +
+  stat_pvalue_manual(
+    p_anno,
+    label = "label",
+    tip.length = 0.01,
+    size = 3,
+    hide.ns = TRUE
+  ) +
+  theme(
+    plot.margin = unit(c(6, 2, 2, 2), "mm"),  # mais espaço em cima
+    panel.spacing = unit(3, "mm")             # espaçamento entre facets
+  )
+
 
 #figure B PCA ALL
 data = readRDS(file = "./data_nor.rds")

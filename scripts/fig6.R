@@ -38,9 +38,9 @@ dis = list(var = c("Healthy","Autoinflammation of unknown origin","Still's disea
                     "BAFF-Rhigh Naive B Cells in Naive B Cells",
                     "CD40+ CD21- B Cells in CD21- B Cells",
                     "CD94+ CD16+ NK Cells in CD16+ NK Cells"),
-           pos_refx1 = c(NA,0.5,0.4,1,0.5),
+           pos_refx1 = c(NA,0.8,0.4,1,0.5),
            pos_refy1 =c(NA,0,1.7,1,1),
-           pos_refx2 = c(NA,0.8,0.4,0.9,0.25),
+           pos_refx2 = c(NA,1,0.4,0.9,0.25),
            pos_refy2 =c(NA,1.5,0,-0.2,0))
 new_labels = function(vet){
   aux = sapply(as.character(vet), function(x) {
@@ -149,6 +149,13 @@ get_protein_names <- function(ids, prot_df) {
   prot_df$`Protein names`[idx]
 }
 
+wilcox_p <- function(x, g, a, b) {
+  xa <- x[g == a]; xb <- x[g == b]
+  xa <- xa[is.finite(xa)]; xb <- xb[is.finite(xb)]
+  if (length(xa) < 2 || length(xb) < 2) return(NA_real_)
+  tryCatch(wilcox.test(xa, xb)$p.value, error = function(e) NA_real_)
+}
+
 
 ##################################################################################
 # Figure 6
@@ -171,18 +178,63 @@ df$out[df$disease == dis$var[i] & !is.na(df$treated) & df$treated == 1] ="treate
 df$out = factor(df$out,levels = c("Healthy","treated","untreated"))
 
 res = read.csv(paste0("./mark_p/" ,dis$var[i] ,".csv"))
+###
+markers <- res$col_p
+p_health   <- vapply(markers, function(m) wilcox_p(df[[m]], df$out, "treated", "Healthy"), numeric(1))
+p_untreated <- vapply(markers, function(m) wilcox_p(df[[m]], df$out, "treated", "untreated"), numeric(1))
+res$p_health   <- p.adjust(p_health, method = "BH")
+res$p_untreated <- p.adjust(p_untreated, method = "BH")
+###
 res = res[res$p_value<=0.05,]
-res = res$col_p[1:10]
-
+res_aux = res[1:10,]
+res = res_aux$col_p[1:10]
 colu = c("out",res)
+res_aux$col_p = get_protein_names(res_aux$col_p,prot)
 aux = df[,colu]
 aux = aux[!is.na(aux$out),]
 colnames(aux)[2:11] = get_protein_names(colnames(aux)[2:11],prot)
+
 res = get_protein_names(res,prot)
 aux = gather(aux, marks,value,res)
 aux = aux[!is.na(aux$value), ]
 aux$marks = new_labels(aux$marks)
 aux$marks = factor(aux$marks, levels=new_labels(res))
+panel_stats <- aux %>%
+  group_by(marks) %>%
+  summarise(
+    y_top = as.numeric(quantile(value, 0.98, na.rm = TRUE)),   # topo robusto
+    y_low = as.numeric(quantile(value, 0.02, na.rm = TRUE)),   # base robusta
+    y_rng = y_top - y_low,
+    .groups = "drop"
+  ) %>%
+  mutate(y_rng = ifelse(y_rng <= 0, 1, y_rng))
+
+p_anno <- res_aux %>%
+  transmute(
+    marks  = new_labels(col_p),
+    p_health  = p_health,
+    p_untreated = p_untreated
+  ) %>%
+  pivot_longer(cols = c(p_health, p_untreated), names_to = "cmp", values_to = "p.adj") %>%
+  mutate(
+    group1 = "treated",
+    group2 = ifelse(cmp == "p_health", "Healthy", "untreated"),
+    label = ifelse(
+      p.adj < 0.0001,
+      "p < 0.0001",
+      paste0("p = ", formatC(p.adj, format = "f", digits = 4))
+    )
+  ) %>%
+  left_join(panel_stats, by = "marks") %>%
+  mutate(
+    # sempre perto do topo "visual" do painel
+    y.position = y_top + 0.20 * y_rng +
+      ifelse(group2 == "untreated", 0.26 * y_rng, 0)
+  ) %>%
+  filter(!is.na(p.adj), p.adj < 0.05)
+
+
+
 fig_a=aux %>% ggplot(aes(x=out,y=value,fill = out))+
   facet_wrap( ~ marks,scales = "free_y",ncol = 2 )+
   geom_violin(scale = "width",trim = FALSE,draw_quantiles = c(0.5))+
@@ -205,6 +257,23 @@ fig_a=aux %>% ggplot(aes(x=out,y=value,fill = out))+
         legend.justification='left',
         legend.direction='horizontal',
         plot.margin = unit(c(0,2,2,2),"mm"))
+
+
+fig_a <- fig_a +
+  scale_y_continuous(expand = expansion(mult = c(0.02, 0.18))) +
+  coord_cartesian(clip = "off") +
+  stat_pvalue_manual(
+    p_anno,
+    label = "label",
+    tip.length = 0.01,
+    size = 3,
+    hide.ns = TRUE
+  ) +
+  theme(
+    plot.margin = unit(c(6, 2, 2, 2), "mm"),  # mais espaço em cima
+    panel.spacing = unit(3, "mm")             # espaçamento entre facets
+  )
+
 
 #figure B PCA ALL
 data = readRDS(file = "./data_nor.rds")
@@ -274,7 +343,7 @@ p <- data %>% ggplot(aes(x=PC1, y=PC2))+
   theme(legend.position = "none",axis.title.x = element_text(size = 10,family = font),axis.title.y = element_text(size = 10,family = font),
         axis.text.x = element_text(size=8,family = font),axis.text.y = element_text(size=8,family = font))
 fig1_pca <- p + 
-  geom_richtext(data=aux, aes(x=PC1*20+c(0,-2), y=PC2*20+c(-1,1), label=new_labels(Disease)), size = 2.5, color="black",family=font,fill=fill_alpha("bisque2",0.7))+
+  geom_richtext(data=aux, aes(x=PC1*20+c(0,-2), y=PC2*20+c(-1,1), label=new_labels(Disease)), size = 2.5, hjust=c(dis$pos_refx1[i],dis$pos_refx2[i]),color="black",family=font,fill=fill_alpha("bisque2",0.7))+
   geom_segment(data=aux,aes(x=0, y=0, xend=PC1*20, yend=PC2*20), arrow=arrow(length=unit(0.3,"cm")), color="black",linewidth=1)+
   theme_bw(base_family = font)+
   theme(legend.position = "none",axis.title.x = element_text(size = 10,family = font),axis.title.y = element_text(size = 10,family = font),

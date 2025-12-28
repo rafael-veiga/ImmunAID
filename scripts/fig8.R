@@ -149,88 +149,227 @@ get_protein_names <- function(ids, prot_df) {
   prot_df$`Protein names`[idx]
 }
 
+wilcox_p <- function(x, g, a, b) {
+  xa <- x[g == a]; xb <- x[g == b]
+  xa <- xa[is.finite(xa)]; xb <- xb[is.finite(xb)]
+  if (length(xa) < 2 || length(xb) < 2) return(NA_real_)
+  tryCatch(wilcox.test(xa, xb)$p.value, error = function(e) NA_real_)
+}
+
+########################################################################################
 ########################################################################################
 # Figure 8
-## violin B
-df = read.csv("./RF_imp2_p.csv")
+## violin B (usando p-ajustados da pasta mark_p, estilo Figure 4)
+########################################################################################
+
+# df de importância
+df  = read.csv("./RF_imp2_p.csv")
 res = as.character(df$vari)
-res = res[res!="age"]
-res = res[res!="sex"]
+res = res[res != "age"]
+res = res[res != "sex"]
 res = res[1:16]
+
+# dados principais
 data = readRDS(file = "./data.rds")
-df = data$df_p
+df   = data$df_p
 prot = data$lab
-df$treated[df$disease=="Healthy"] = 0
+
+# treated = 0 para Healthy (mantém para o violin)
+df$treated[df$disease == "Healthy"] = 0
+
+# renomeia doenças
 df = df %>% 
-  mutate(disease = case_when(
-    disease=="Inflammation of unknown origin" ~ "Autoinflammation of unknown origin",
-    disease=="AOSD" ~ "Still's disease",
-    TRUE ~ disease
-  ))
-df = df[df$disease %in% dis$var,]
-colnames(df)[6:ncol(df)] = get_protein_names(colnames(df)[6:ncol(df)],prot)
-res = get_protein_names(res,prot)
-df$disease = factor(df$disease,levels = dis$var)
-df = df %>% select(c("disease","treated",res))
-df = gather(df, marks,value,res)
-df = df[!is.na(df$value),]
+  dplyr::mutate(
+    disease = dplyr::case_when(
+      disease == "Inflammation of unknown origin" ~ "Autoinflammation of unknown origin",
+      disease == "AOSD"                           ~ "Still's disease",
+      TRUE                                        ~ disease
+    )
+  )
 
+# só doenças de interesse listadas em dis$var
+df = df[df$disease %in% dis$var, ]
 
+# renomeia colunas de proteína (para nomes "bonitos")
+#colnames(df)[6:ncol(df)] = get_protein_names(colnames(df)[6:ncol(df)], prot)
+#res = get_protein_names(res, prot)
+
+# ordenação dos grupos
+df$disease = factor(df$disease, levels = dis$var)
+
+# long format
+df = df %>% dplyr::select(c("disease", "treated", res))
+df = tidyr::gather(df, marks, value, res)
+df = df[!is.na(df$value), ]
+
+################################################################################
+# ANEXANDO p-ajustados da pasta mark_p (col_p, p_value_adj)
+################################################################################
+
+ref    <- "Healthy"
+others <- setdiff(dis$var, ref)           # todas as outras doenças
+n_others <- length(others)
+
+# vamos assumir que os arquivos em ./mark_p/ têm nomes = nome da doença (como em Figure 4)
+# e que a coluna de marcador é "col_p", com p-ajustado em "p_value_adj"
+
+res_aux <- vector("list", length = n_others)
+
+for (a in seq_len(n_others)) {
+  aux_p <- read.csv(paste0("./mark_p/", others[a], ".csv"))
+  # mantém só os marcadores que estão em 'res'
+  aux_p <- aux_p[aux_p$col_p %in% res, c("col_p", "p_value_adj")]
+  colnames(aux_p)[2] <- paste0("p", a)    # p1, p2, ..., pN
+  res_aux[[a]] <- aux_p
+}
+
+# tabela base com todos os marcadores
+df_aux <- tibble::tibble(col_p = res)
+
+# mescla p1..pN por marcador
+for (i in seq_len(n_others)) {
+  df_aux <- merge.data.frame(df_aux, res_aux[[i]], by = "col_p")
+}
+
+# junta os p-ajustados no df longo
+df <- merge.data.frame(df, df_aux, by.x = "marks", by.y = "col_p")
+
+# só agora aplicamos os rótulos bonitos pros painéis
 df$marks = new_labels(df$marks)
-df$marks = factor(df$marks, levels=new_labels(res))
-aux = df
+df$marks = factor(df$marks, levels = new_labels(res))
+
+aux <- df   # objeto que vai pro ggplot e pro cálculo de posições
+
+################################################################################
+# PREPARANDO ANOTAÇÕES: estilo Figure 4 (stat_pvalue_manual)
+################################################################################
+
+# mapa de comparações: p1 = Healthy vs others[1], ..., pN
+p_cols <- paste0("p", seq_len(n_others))
+
+comparisons_map <- tibble::tibble(
+  cmp    = p_cols,
+  group1 = ref,
+  group2 = others[seq_len(n_others)]
+)
+
+# estatística por painel para posicionar as barras
+panel_stats8 <- aux %>%
+  dplyr::group_by(marks) %>%
+  dplyr::summarise(
+    y_top = as.numeric(stats::quantile(value, 0.98, na.rm = TRUE)),
+    y_low = as.numeric(stats::quantile(value, 0.02, na.rm = TRUE)),
+    y_rng = y_top - y_low,
+    .groups = "drop"
+  ) %>%
+  dplyr::mutate(y_rng = ifelse(y_rng <= 0, 1, y_rng))
+
+# df de anotações no formato esperado por stat_pvalue_manual
+p_anno8 <- aux %>%
+  dplyr::distinct(marks, dplyr::across(dplyr::all_of(p_cols))) %>%  # 1 linha por marks
+  tidyr::pivot_longer(
+    cols      = dplyr::all_of(p_cols),
+    names_to  = "cmp",
+    values_to = "p.adj"
+  ) %>%
+  dplyr::left_join(comparisons_map, by = "cmp") %>%
+  dplyr::left_join(panel_stats8,   by = "marks") %>%
+  dplyr::group_by(marks) %>%
+  dplyr::arrange(marks, group2, .by_group = TRUE) %>%
+  dplyr::mutate(
+    idx = dplyr::row_number(),
+    label = dplyr::if_else(
+      is.na(p.adj),
+      NA_character_,
+      dplyr::if_else(
+        p.adj < 0.0001,
+        "p < 0.0001",
+        paste0("p = ", formatC(p.adj, format = "f", digits = 4))
+      )
+    ),
+    # empilha barras acima do dado (igual “espírito” da Figure 4)
+    y.position = y_top + (idx - 1) * 0.30 * y_rng
+  ) %>%
+  dplyr::ungroup() %>%
+  # plota só significantes
+  dplyr::filter(!is.na(p.adj), p.adj < 0.05)
+
+aux$marks = get_protein_names(aux$marks, prot)
+################################################################################
+# PLOT: violinos iguais ao original + barras/p-valor estilo Figure 4
+################################################################################
+
 fig_3 <- aux %>% 
-  ggplot(aes(x = disease, y = value, fill = disease)) +
-  facet_wrap(~ marks, scales = "free_y", ncol = 2) +
-  geom_half_violin(
-    data = aux %>% filter(treated == 0), side = "l",
+  ggplot2::ggplot(ggplot2::aes(x = disease, y = value, fill = disease)) +
+  ggplot2::facet_wrap(~ marks, scales = "free_y", ncol = 2) +
+  gghalves::geom_half_violin(
+    data = aux %>% dplyr::filter(treated == 0), side = "l",
     trim = FALSE, scale = "width", width = 1
   ) +
-  geom_half_violin(
-    data = aux %>% filter(treated == 1), side = "r",
+  gghalves::geom_half_violin(
+    data = aux %>% dplyr::filter(treated == 1), side = "r",
     trim = FALSE, scale = "width", width = 1
   ) +
-  geom_jitter(
-    aes(shape = factor(treated), group = factor(treated)),
-    position = position_jitterdodge(dodge.width = 0.5, jitter.width = 0.6, jitter.height = 0),
+  ggplot2::geom_jitter(
+    ggplot2::aes(shape = factor(treated), group = factor(treated)),
+    position = ggplot2::position_jitterdodge(
+      dodge.width   = 0.5,
+      jitter.width  = 0.6,
+      jitter.height = 0
+    ),
     size = 1
   ) +
   # barra de média dashed e fina
-  stat_summary(
-    aes(group = factor(treated)),
+  ggplot2::stat_summary(
+    ggplot2::aes(group = factor(treated)),
     fun      = mean, fun.min = mean, fun.max = mean,
     geom     = "crossbar", width = 0.3,
-    position = position_dodge(width = 0.8),
+    position = ggplot2::position_dodge(width = 0.8),
     color    = "black",
     linetype = "dashed",
     size     = 0.3
   ) +
-  scale_shape_manual(
+  ggplot2::scale_shape_manual(
     values = c("0" = 19, "1" = 4),
     labels = c("0" = "untreated", "1" = "treated"),
     name   = "Treated"
   ) +
-  scale_fill_manual(values = dis$color, limits = dis$var) +
-  scale_x_discrete(limits = dis$var) +
-  #scale_y_continuous(limits = c(0, NA)) +
-  labs(x = NULL, y = "Log2 LFQ intensity") +
-  theme_bw(base_family = font) +
-  theme(
-    axis.title.x      = element_blank(),
-    axis.text.x       = element_blank(),
-    axis.ticks.x      = element_blank(),
-    axis.text.y       = element_text(size = 8, family = font),
-    axis.title.y      = element_text(size = 10, family = font),
-    legend.title      = element_blank(),
-    legend.text       = element_text(size = 11, family = font),
+  ggplot2::scale_fill_manual(values = dis$color, limits = dis$var) +
+  ggplot2::scale_x_discrete(limits = dis$var) +
+  ggplot2::labs(x = NULL, y = "Log2 LFQ intensity") +
+  ggplot2::theme_bw(base_family = font) +
+  ggplot2::theme(
+    axis.title.x      = ggplot2::element_blank(),
+    axis.text.x       = ggplot2::element_blank(),
+    axis.ticks.x      = ggplot2::element_blank(),
+    axis.text.y       = ggplot2::element_text(size = 8, family = font),
+    axis.title.y      = ggplot2::element_text(size = 10, family = font),
+    legend.title      = ggplot2::element_blank(),
+    legend.text       = ggplot2::element_text(size = 11, family = font),
     strip.text        = ggtext::element_markdown(size = 10, family = font),
-    strip.background  = element_rect(fill = "bisque"),
+    strip.background  = ggplot2::element_rect(fill = "bisque"),
     legend.position   = "top",
     legend.justification = "left",
     legend.direction  = "horizontal",
-    plot.margin       = unit(c(0,2,2,2), "mm")
+    plot.margin       = grid::unit(c(0, 2, 2, 2), "mm")
   )
 
-pdf("./fig8.pdf",width = 9,height = 12)
+# mesma “parte de cima” da Figure 4: espaço extra + barras e p-valor
+fig_3 <- fig_3 +
+  ggplot2::scale_y_continuous(expand = ggplot2::expansion(mult = c(0.02, 0.18))) +
+  ggplot2::coord_cartesian(clip = "off") +
+  ggpubr::stat_pvalue_manual(
+    p_anno8,
+    label      = "label",
+    tip.length = 0.01,
+    size       = 2,
+    hide.ns    = TRUE
+  ) +
+  ggplot2::theme(
+    plot.margin   = grid::unit(c(6, 2, 2, 2), "mm"),
+    panel.spacing = grid::unit(3, "mm")
+  )
+
+pdf("./fig8.pdf", width = 9, height = 12)
 print(fig_3)
 dev.off()

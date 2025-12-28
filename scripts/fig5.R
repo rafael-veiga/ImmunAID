@@ -39,7 +39,7 @@ dis = list(var = c("Healthy","Autoinflammation of unknown origin","Still's disea
                     "CD40+ CD21- B Cells in CD21- B Cells",
                     "CD94+ CD16+ NK Cells in CD16+ NK Cells"),
            pos_refx1 = c(NA,0.5,0.4,1,0.5),
-           pos_refy1 =c(NA,0,1.7,1,1),
+           pos_refy1 =c(NA,0.5,1.7,1,1),
            pos_refx2 = c(NA,0.8,0.4,0.9,0.25),
            pos_refy2 =c(NA,1.5,0,-0.2,0))
 new_labels = function(vet){
@@ -218,6 +218,14 @@ i=2
 res = read.csv(paste0("./mark_p/" ,dis$var[i] ,".csv"))
 res = res[res$p_value<=0.05,]
 res = res$col_p[1:10]
+res_aux = tibble(col_p=res)
+for(a in 1:4){
+  aux = read.csv(paste0("./mark_p/" ,dis$var[a+1] ,".csv"))
+  aux = aux[aux$col_p %in% res,c("col_p","p_value_adj")]
+  colnames(aux)[2] = paste0("p",a)
+  res_aux = merge.data.frame(res_aux,aux,by="col_p")
+}
+res_aux$col_p = get_protein_names(res_aux$col_p,prot)
 colu = c("disease",res)
 aux = df[,colu]
 colnames(aux)[2:11] = get_protein_names(colnames(aux)[2:11],prot)
@@ -225,6 +233,50 @@ res = get_protein_names(res,prot)
 aux = gather(aux, marks,value,res)
 aux = aux[!is.na(aux$value), ]
 aux$marks = factor(aux$marks, levels=res)
+aux = merge.data.frame(aux,res_aux,by.x="marks",by.y="col_p")
+
+ref <- "Healthy"
+others <- setdiff(dis$var, ref)
+
+comparisons_map <- tibble::tibble(
+  cmp = c("p1","p2","p3","p4"),
+  group1 = ref,
+  group2 = others[1:4]
+)
+panel_stats3 <- aux %>%
+  group_by(marks) %>%
+  summarise(
+    y_top = as.numeric(quantile(value, 0.98, na.rm = TRUE)),
+    y_low = as.numeric(quantile(value, 0.02, na.rm = TRUE)),
+    y_rng = y_top - y_low,
+    .groups = "drop"
+  ) %>%
+  mutate(y_rng = ifelse(y_rng <= 0, 1, y_rng))
+p_anno3 <- aux %>%
+  distinct(marks, p1, p2, p3, p4) %>%   # 1 linha por marks
+  pivot_longer(cols = c(p1,p2,p3,p4), names_to = "cmp", values_to = "p.adj") %>%
+  left_join(comparisons_map, by = "cmp") %>%
+  left_join(panel_stats3, by = "marks") %>%
+  mutate(
+    label = ifelse(
+      p.adj < 0.0001,
+      "p < 0.0001",
+      paste0("p = ", formatC(p.adj, format = "f", digits = 4))
+    ),
+    # offsets para empilhar 4 comparações (ajuste se quiser)
+    y.position = y_top + 0.0 * y_rng +
+      case_when(
+        cmp == "p1" ~ 0.00 * y_rng,
+        cmp == "p2" ~ 0.20 * y_rng,
+        cmp == "p3" ~ 0.40 * y_rng,
+        cmp == "p4" ~ 0.60 * y_rng,
+        TRUE ~ 0
+      )
+  ) %>%
+  filter(!is.na(p.adj), p.adj < 0.05)
+
+
+
 fig_c=aux %>% ggplot(aes(x=disease,y=value,fill = disease))+
   facet_wrap( ~ marks,scales = "free_y",ncol = 2 )+
   geom_violin(scale = "width",trim = FALSE,draw_quantiles = c(0.5))+
@@ -247,6 +299,21 @@ fig_c=aux %>% ggplot(aes(x=disease,y=value,fill = disease))+
         legend.justification='left',
         legend.direction='horizontal',
         plot.margin = unit(c(0,2,2,2),"mm"))
+
+fig_c <- fig_c +
+  scale_y_continuous(expand = expansion(mult = c(0.02, 0.18))) +
+  coord_cartesian(clip = "off") +
+  stat_pvalue_manual(
+    p_anno3,
+    label = "label",
+    tip.length = 0.01,
+    size = 2,
+    hide.ns = TRUE
+  ) +
+  theme(
+    plot.margin = unit(c(6, 2, 2, 2), "mm"),
+    panel.spacing = unit(3, "mm")
+  )
 
 # figure D auc curve
 data = read.csv(file = "./auc_curv_p.csv")

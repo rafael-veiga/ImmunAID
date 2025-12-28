@@ -39,9 +39,9 @@ dis = list(var = c("Healthy","Autoinflammation of unknown origin","Still's disea
                     "CD40+ CD21- B Cells in CD21- B Cells",
                     "CD94+ CD16+ NK Cells in CD16+ NK Cells"),
            pos_refx1 = c(NA,0.5,0.4,1,0.5),
-           pos_refy1 =c(NA,0,1.7,1,1),
+           pos_refy1 =c(NA,1,2.3,1,1),
            pos_refx2 = c(NA,0.8,0.4,0.9,0.25),
-           pos_refy2 =c(NA,1.5,0,-0.2,0))
+           pos_refy2 =c(NA,0.5,0,-0.2,0))
 new_labels = function(vet){
   aux = sapply(as.character(vet), function(x) {
     x = gsub("\\+", "<sup>+</sup>", x)
@@ -155,19 +155,46 @@ res = read.csv(paste0("./mark_f/" ,dis$var[2] ,".csv"))
 aux = res[res$p_value<=0.05,]
 aux = aux[1:10,]
 aux = aux %>% mutate(out = factor(col_f, levels=aux$col_f))
-fig_a = aux %>% ggplot(aes(y=out, x=or, xmin=or_l, xmax=or_h)) +
-    geom_pointrange()+
-    scale_y_discrete (limits = rev(as.vector(aux$out)),labels=new_labels(rev(as.vector(aux$out))))+
-    scale_x_continuous(trans = scales::log_trans(),breaks = c(0.1,0.5,1,5,10,50,100),limits=c(0.1,NA))+
-    geom_vline(xintercept=1, lty=2, linewidth =1)+
-    geom_errorbar(width=0.5, cex=1)+ # Makes whiskers on the range (more aesthetically pleasing)
-    geom_point(shape = 15, size = 2,color=dis$color[2])+
-    labs(y=element_blank(),x = "OR")+
-    theme_classic(base_family = font)+
-    theme(axis.title.x = element_text(size = 10,family = font),
-          axis.text.x = element_text(size = 8,family=font),
-          axis.text.y = ggtext::element_markdown(size = 10,family=font),
-          plot.margin = unit(c(2,2,0,2),"mm"))
+aux2 <- aux %>%
+  mutate(
+    p_lab = case_when(
+      is.na(aux$p_value_adj)        ~ "",
+      aux$p_value_adj < 0.0001       ~ "p < 0.0001",
+      TRUE            ~ paste0("p = ", formatC(aux$p_value_adj, format = "f", digits = 4))
+    )
+  )
+x_p <- max(aux2$or_h, na.rm = TRUE) * 1.15
+
+fig_a <- aux2 %>%
+  ggplot(aes(y = out, x = or, xmin = or_l, xmax = or_h)) +
+  geom_pointrange() +
+  scale_y_discrete(
+    limits = rev(as.vector(aux2$out)),
+    labels = new_labels(rev(as.vector(aux2$out)))
+  ) +
+  scale_x_continuous(
+    trans  = scales::log_trans(),
+    breaks = c(0.1, 0.5, 1, 5, 10, 50, 100),
+    limits = c(0.1, NA),
+    expand = expansion(mult = c(0, 0.25))  # folga à direita p/ caber o texto
+  ) +
+  geom_vline(xintercept = 1, lty = 2, linewidth = 1) +
+  geom_errorbar(width = 0.5, cex = 1) +
+  geom_point(shape = 15, size = 2, color = dis$color[2]) +
+  geom_text(
+    aes(x = x_p, label = p_lab),
+    hjust = 0, size = 3
+  ) +
+  #annotate("text", x = x_p, y = Inf, label = "", vjust = 1.2, hjust = 0, size = 3) +
+  coord_cartesian(clip = "off") +
+  labs(y = NULL, x = "OR") +
+  theme_classic(base_family = font) +
+  theme(
+    axis.title.x = element_text(size = 10, family = font),
+    axis.text.x  = element_text(size = 8, family = font),
+    axis.text.y  = ggtext::element_markdown(size = 10, family = font),
+    plot.margin  = unit(c(2, 18, 0, 2), "mm") # aumenta margem direita
+  )
 
 # figure B auc_N 
 data = read.csv("./auc_n_f.csv")
