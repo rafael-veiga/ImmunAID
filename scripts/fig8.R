@@ -295,6 +295,10 @@ p_anno8 <- aux %>%
   dplyr::filter(!is.na(p.adj), p.adj < 0.05)
 
 aux$marks = get_protein_names(aux$marks, prot)
+res = get_protein_names(res, prot)
+aux$marks = factor(aux$marks,levels = res)
+p_anno8$marks = get_protein_names(p_anno8$marks, prot)
+panel_stats8$marks = get_protein_names(panel_stats8$marks, prot)
 ################################################################################
 # PLOT: violinos iguais ao original + barras/p-valor estilo Figure 4
 ################################################################################
