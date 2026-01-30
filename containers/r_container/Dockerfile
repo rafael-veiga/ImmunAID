@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 # pak (instalação rápida) + seus pacotes
 RUN R -q -e "install.packages('pak', repos='https://cloud.r-project.org')" && \
-    R -q -e "pak::pkg_install(c('tidyverse','data.table','remotes','future.apply','ggpubr','VIM','forecast','ape','WCluster','ggExtra','ggtree','patchwork','gghalves','randomForest','ggrepel','ggtext','extrafont','RColorBrewer'))"
+    R -q -e "pak::pkg_install(c('tidyverse','data.table','remotes','ggpubr','VIM','forecast','ape','WCluster','ggExtra','ggtree','patchwork','gghalves','randomForest','ggrepel','ggtext','extrafont','RColorBrewer','readxl'))"
 
 # usuário não-root (boa prática p/ Nextflow)
 ARG UID=1000
